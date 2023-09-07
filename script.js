@@ -4,6 +4,8 @@ let gameover = new Audio("gameover.mp3")
 
 let turn ="X"
 let isgameover= false;
+let isTie=false;
+
 
 let player1Name;
 let player2Name;
@@ -36,19 +38,25 @@ const checkWin = () =>{
         [2, 5, 8,15,15,90],
         [0, 4, 8,5,15,45],
         [2, 4, 6,5,15,135],
-    ]
+    ];
+    
     wins.forEach(e=>{
         if((boxtext[e[0]].innerText === boxtext[e[1]].innerText  ) && (boxtext[e[2]].innerText === boxtext[e[1]].innerText  ) && (boxtext[e[0]].innerText !=="")){
             // document.querySelector('.info').innerText = boxtext[e[0]].innerText + "Won"
-            document.querySelector('.info').innerText = (boxtext[e[0]].innerText === player1Symbol ? player1Name : player2Name) + " Won";
-
             isgameover = true
             document.querySelector('.imgBox').getElementsByTagName('img')[0].style.width= "150px";
             document.querySelector('.line').style.width="20vw"
-            document.querySelector('.line').style.transform = `translate(${e[3]}vw,${e[4]}vw) rotate(${e[5]}deg)`
+            document.querySelector('.line').style.transform = `translate(${e[3]}vw,${e[4]}vw) rotate(${e[5]}deg)`;
+            disableAllBoxes();
 
         }
-    })
+    });
+    if (!isgameover && Array.from(boxtext).every(box => box.innerText !== "")) {
+        isTie = true;
+        document.querySelector('.info').innerText = "It's a Tie!";
+    }
+
+
 
 }
 
@@ -56,12 +64,12 @@ let boxes = document.getElementsByClassName("box");
 Array.from(boxes).forEach(element =>{
     let boxtext = element.querySelector('.boxtext');
     element.addEventListener('click', ()=>{
-        if (boxtext.innerText === ''){
+        if (boxtext.innerText === '' && !isgameover && !isTie){
             boxtext.innerText = turn;
             turn = changeTurn();
             audioTuirn.play();
             checkWin();
-            if (!isgameover){ 
+            if (!isgameover && !isTie){ 
 
                 document.getElementsByClassName("info")[0].innerText = "Turn For" + (turn === player1Symbol ? player1Name : player2Name);
             }
@@ -80,15 +88,47 @@ reset.addEventListener('click',()=>{
     });
     turn ="X"
      isgameover= false;
+     isTie=false;
      document.getElementsByClassName("info")[0].innerText = "Turn For" + turn;
      document.querySelector('.imgBox').getElementsByTagName('img')[0].style.width= "0px";
 
      document.getElementById('winningLine').style.width="0";
     //  document.getElementById('winningLine').style.transform="";
 
+    enableAllBoxes();
 
 
-})
+
+});
+
+// Function to disable all boxes
+const disableAllBoxes = () => {
+    Array.from(boxes).forEach(box => {
+        box.removeEventListener('click', () => { });
+    });
+};
+
+// Function to enable all boxes
+const enableAllBoxes = () => {
+    Array.from(boxes).forEach(box => {
+        let boxtext = box.querySelector('.boxtext');
+        if (boxtext.innerText === '') {
+            box.addEventListener('click', () => {
+                if (boxtext.innerText === '' && !isgameover && !isTie) {
+                    boxtext.innerText = turn;
+                    turn = changeTurn();
+                    audioTuirn.play();
+                    checkWin();
+                    if (!isgameover && !isTie) {
+                        document.querySelector('.info').innerText = "Turn for " + (turn === player1Symbol ? player1Name : player2Name);
+                    }
+                }
+            });
+        }
+    });
+};
+
+
 
 
 
