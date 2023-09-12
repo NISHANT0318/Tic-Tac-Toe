@@ -39,20 +39,40 @@ const checkWin = () =>{
         [0, 4, 8,5,15,45],
         [2, 4, 6,5,15,135],
     ];
-    
-    wins.forEach(e=>{
+    let winMobile = [
+        [0, 1, 2, 0, 10, 0],
+        [3, 4, 5, 0,30, 0],
+        [6, 7, 8, , 50, 0],
+        [0, 3, 6, -20, 29, 90],
+        [1, 4, 7, 0, 29, 90],
+        [2, 5, 8, 20, 15, 90],
+        [0, 4, 8, 0, 30, 45],
+        [2, 4, 6, 0, 30, 135],
+    ];
+    wins.forEach((e,index) => {
         if((boxtext[e[0]].innerText === boxtext[e[1]].innerText  ) && (boxtext[e[2]].innerText === boxtext[e[1]].innerText  ) && (boxtext[e[0]].innerText !=="")){
             // document.querySelector('.info').innerText = boxtext[e[0]].innerText + "Won"
             isgameover = true
             document.querySelector('.imgBox').getElementsByTagName('img')[0].style.width= "150px";
-            document.querySelector('.line').style.width="20vw"
-            document.querySelector('.line').style.transform = `translate(${e[3]}vw,${e[4]}vw) rotate(${e[5]}deg)`;
+            
+           
+            if (window.innerWidth > 600) {
+                document.querySelector('.line').style.width="20vw";
+
+                document.querySelector('.line').style.transform = `translate(${e[3]}vw,${e[4]}vw) rotate(${e[5]}deg)`;
+            } else {
+                document.querySelector('.line').style.width="60vw";
+                const mobileValues = winMobile[index] || [0, 0, 0, 0, 0, 0];
+                document.querySelector('.line').style.transform = `translate(${mobileValues[3]}vw,${mobileValues[4]}vw) rotate(${mobileValues[5]}deg)`;
+            }
             disableAllBoxes();
+            
 
         }
     });
     if (!isgameover && Array.from(boxtext).every(box => box.innerText !== "")) {
         isTie = true;
+         gameover.play();
         document.querySelector('.info').innerText = "It's a Tie!";
     }
 
@@ -96,6 +116,7 @@ reset.addEventListener('click',()=>{
     //  document.getElementById('winningLine').style.transform="";
 
     enableAllBoxes();
+   
 
 
 
