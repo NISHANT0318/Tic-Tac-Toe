@@ -1,6 +1,7 @@
 let music = new Audio("music.mp3")
 let audioTuirn = new Audio("ting.mp3")
 let gameover = new Audio("gameover.mp3")
+let winningTone = new Audio("winingtone.mp3")
 
 let turn ="X"
 let isgameover= false;
@@ -65,7 +66,9 @@ const checkWin = () =>{
                 const mobileValues = winMobile[index] || [0, 0, 0, 0, 0, 0];
                 document.querySelector('.line').style.transform = `translate(${mobileValues[3]}vw,${mobileValues[4]}vw) rotate(${mobileValues[5]}deg)`;
             }
+
             disableAllBoxes();
+            winningTone.play();
             
 
         }
